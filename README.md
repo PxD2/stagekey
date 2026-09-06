@@ -21,21 +21,22 @@ tags:
 
 A film desk a kid can press, and a crew can finish.
 
+**72-hour close desk (through 8 Sep 2026, 12:43 Arizona):** [ROADMAP.md](ROADMAP.md)  
+Company pack (not an offering): [pxd2.github.io](https://pxd2.github.io/)
+
 The front has jobs with plain names. Under the floor are three original-trilogy techniques that still beat a one-shot generator:
 
-1. **Go-motion** — the puppet moves *while the shutter is open*, so the frame carries real blur instead of a chopped stop-motion stutter.
-2. **Motion control** — the same camera path is a JSON rig. Run it on the beauty pass, then on the screen pass, then on the glow pass. They lock.
-3. **Optical printing** — key, shadow, hologram, cartoon, tracers stacked in order, not hoped-for in a single prompt.
-
-A giant model can invent a pretty shot once. It cannot repeat the move, hold the matte, or give you shutter-true blur on command. That is the competition.
+1. **Go-motion** — the puppet moves *while the shutter is open*.
+2. **Motion control** — the same camera path is a JSON rig.
+3. **Optical printing** — key, hologram, cartoon stacked in order.
 
 ## Two desks, one agent
 
 | Layer | Tool | Does |
 | --- | --- | --- |
-| Understand long video | [Adversal MCP](https://adversal.ai) (`adversal-cli`) | Upload / URL → remote queue → Markdown + synced frames. Async. MD5 reuse. |
-| Finish the plate | StageKey | Key, hologram, cartoon, go-motion, rerun a rig, reel. |
-| Plan and code | Grok + this repo | Architecture and GitHub. Grok chat is not an MCP host for Adversal. |
+| Understand long video | [Adversal MCP](https://adversal.ai) (`adversal-cli`) | Upload / URL → remote queue → Markdown + synced frames |
+| Finish the plate | StageKey | Key, hologram, cartoon, go-motion, farm, reel |
+| Plan | Grok (online) or local Mistral | Farm cards. Grok chat is not an MCP host for Adversal |
 
 See [docs/ADVERSAL.md](docs/ADVERSAL.md). Dual-server config: [docs/mcp.example.json](docs/mcp.example.json).
 
@@ -43,51 +44,24 @@ See [docs/ADVERSAL.md](docs/ADVERSAL.md). Dual-server config: [docs/mcp.example.
 
 ```bash
 python -m stagekey movie toy.png --job toy-walk --name walker
+python -m stagekey farm toy.png --jobs ghost-message,alert-ghost,cartoon-show --planner grok
 ```
 
-| Button the kid sees | What the desk actually does |
-| --- | --- |
-| Make the toy walk | Go-motion puppet, heavy shutter, stomp bob |
-| Fly it across the sky | Motion-control flyby, saved rig |
-| Walk the camera in | Repeatable push-in |
-| Make it float | Hover go-motion |
-| Ghost message on black | Pull green/blue, print cyan hologram |
-| Red warning ghost | Same printer, red hologram |
-| Turn it into a cartoon | Cel optical |
-| Cartoon ghost | Cel then hologram |
-| Do the same camera move again | Re-run camera.rig.json on a new plate |
-
-Then cut:
-
-```bash
-python -m stagekey reel shotA.mp4 shotB.mp4 --name first-reel
-```
-
-Open the kid UI:
-
-```bash
-python app.py
-```
-
-Three steps: add a picture, pick a job, press **Make the shot**.
+Open the kid UI: `python app.py`
 
 ## Crew desk
 
 ```bash
-python -m stagekey go plate.png --kind puppet --move heavy-steps --shutter 5
-python -m stagekey rerun other-plate.png camera.rig.json
+python -m stagekey go plate.png --move heavy-steps --shutter 5
 python -m stagekey stage screen.mp4 --screen green --look hologram-cyan --background black
 python -m stagekey ingest long-interview.mp4
-python -m stagekey ingest-status REQUEST_ID --wait
-python -m stagekey ingest-pull REQUEST_ID --dest adversal_out
 ```
 
 ## Install
 
-FFmpeg on PATH. Python 3.10+ (3.13+ if you also install `adversal-cli`).
+FFmpeg on PATH. Python 3.10+ (3.13+ for `adversal-cli`).
 
 ```bash
 python -m pip install -e .
 python -m stagekey bible
-python -m stagekey ingest-probe
 ```
