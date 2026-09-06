@@ -1,4 +1,4 @@
-"""CLI: python -m stagekey stage plate.mp4 --screen green --look hologram-cyan"""
+"""CLI: python -m stagekey coach source.mp4 --jobs hologram-cyan,cel"""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import argparse
 import json
 
 from .adversal import help_text, pipeline_card, pull, status, submit
+from .coach import run_coach
 from .engine import apply_cartoon, apply_hologram, list_modes, stage
 from .farm import DEFAULT_LOOKS, farm
 from .gomotion import apply_rig, go_motion
@@ -15,8 +16,19 @@ from .studio import assemble_reel, make_shot, studio_bible
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(prog="stagekey", description="Key, hologram, cartoon, go-motion, Adversal ingest, multi-render farm")
+    p = argparse.ArgumentParser(
+        prog="stagekey",
+        description="Stage Coach — Adversal understand, StageKey finish",
+    )
     sub = p.add_subparsers(dest="cmd", required=True)
+
+    ch = sub.add_parser("coach", help="Workflow: ingest → select → finish → reel")
+    ch.add_argument("source", help="Local file or public URL")
+    ch.add_argument("--jobs", default=",".join(DEFAULT_LOOKS))
+    ch.add_argument("--name", default="slate")
+    ch.add_argument("--dest", default="adversal_out")
+    ch.add_argument("--notes", default="")
+    ch.add_argument("--no-wait", action="store_true")
 
     s = sub.add_parser("stage", help="One-shot finish")
     s.add_argument("src")
@@ -39,19 +51,19 @@ def main() -> None:
     c.add_argument("--screen", default="none")
     c.add_argument("--out", default=None)
 
-    pr = sub.add_parser("prompt", help="Compile a plate prompt for Wan/LTX/H3")
+    pr = sub.add_parser("prompt", help="Compile a plate prompt")
     pr.add_argument("subject")
     pr.add_argument("--screen", default="green")
     pr.add_argument("--cartoonist", default="off")
     pr.add_argument("--hologram", default="off")
 
-    sub.add_parser("modes", help="Print available screens and looks")
-    sub.add_parser("bible", help="Print the studio bible")
-    sub.add_parser("jobs", help="List kid-desk jobs")
+    sub.add_parser("modes")
+    sub.add_parser("bible")
+    sub.add_parser("jobs")
 
-    mv = sub.add_parser("movie", help="Kid desk: one job, one shot")
+    mv = sub.add_parser("movie", help="One finish from a plate")
     mv.add_argument("src")
-    mv.add_argument("--job", default="toy-walk")
+    mv.add_argument("--job", default="puppet-walk")
     mv.add_argument("--name", default="shot")
     mv.add_argument("--rig", default=None)
 
@@ -68,12 +80,12 @@ def main() -> None:
     rr.add_argument("rig")
     rr.add_argument("--out", default=None)
 
-    rl = sub.add_parser("reel", help="Concat finished shots")
+    rl = sub.add_parser("reel")
     rl.add_argument("clips", nargs="+")
     rl.add_argument("--name", default="reel")
     rl.add_argument("--out", default=None)
 
-    fm = sub.add_parser("farm", help="Multi-render several jobs from one plate")
+    fm = sub.add_parser("farm")
     fm.add_argument("src")
     fm.add_argument("--jobs", default=",".join(DEFAULT_LOOKS))
     fm.add_argument("--name", default="farm")
@@ -81,20 +93,20 @@ def main() -> None:
     fm.add_argument("--notes", default="")
     fm.add_argument("--no-reel", action="store_true")
 
-    ing = sub.add_parser("ingest", help="Queue a video on Adversal (remote understand)")
-    ing.add_argument("source", help="Local file or public URL")
-    ing.add_argument("--artifact", default="report", help="report | frames | transcript")
+    ing = sub.add_parser("ingest", help="Queue on Adversal")
+    ing.add_argument("source")
+    ing.add_argument("--artifact", default="report")
     ing.add_argument("--wait", action="store_true")
 
-    st = sub.add_parser("ingest-status", help="Check an Adversal request_id")
+    st = sub.add_parser("ingest-status")
     st.add_argument("request_id")
     st.add_argument("--wait", action="store_true")
 
-    pl = sub.add_parser("ingest-pull", help="Download Adversal artifacts")
+    pl = sub.add_parser("ingest-pull")
     pl.add_argument("request_id")
     pl.add_argument("--dest", default="adversal_out")
 
-    sub.add_parser("ingest-probe", help="See if adversal-cli is installed and signed in")
+    sub.add_parser("ingest-probe")
 
     args = p.parse_args()
     if args.cmd == "modes":
@@ -108,6 +120,22 @@ def main() -> None:
         return
     if args.cmd == "prompt":
         print(json.dumps(build_plate_prompt(args.subject, args.screen, args.cartoonist, args.hologram), indent=2))
+        return
+    if args.cmd == "coach":
+        jobs = [j.strip() for j in args.jobs.split(",") if j.strip()]
+        print(
+            json.dumps(
+                run_coach(
+                    args.source,
+                    jobs=jobs,
+                    name=args.name,
+                    dest=args.dest,
+                    wait=not args.no_wait,
+                    notes=args.notes,
+                ),
+                indent=2,
+            )
+        )
         return
     if args.cmd == "stage":
         print(stage(args.src, args.screen, args.look, args.background, args.out, args.similarity, args.blend))
@@ -132,7 +160,19 @@ def main() -> None:
         return
     if args.cmd == "farm":
         jobs = [j.strip() for j in args.jobs.split(",") if j.strip()]
-        print(json.dumps(farm(args.src, jobs=jobs, name=args.name, planner=args.planner, reel=not args.no_reel, notes=args.notes), indent=2))
+        print(
+            json.dumps(
+                farm(
+                    args.src,
+                    jobs=jobs,
+                    name=args.name,
+                    planner=args.planner,
+                    reel=not args.no_reel,
+                    notes=args.notes,
+                ),
+                indent=2,
+            )
+        )
         return
     if args.cmd == "ingest":
         print(json.dumps(submit(args.source, artifact=args.artifact, wait=args.wait), indent=2))

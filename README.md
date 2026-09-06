@@ -1,5 +1,5 @@
 ---
-title: StageKey Studio
+title: Stage Coach
 emoji: 🎬
 colorFrom: green
 colorTo: blue
@@ -17,37 +17,34 @@ tags:
   - video
 ---
 
-# StageKey Studio
+# Stage Coach
 
-A film desk a kid can press, and a crew can finish.
+Professional finish floor for long-form sources.
 
-Company pack: [pxd2.github.io](https://pxd2.github.io/). Close clock and terms live there.
+[Adversal](https://adversal.ai) is the workflow ingest MCP — the offer Giulio made. Coach uses it for Markdown and synced frames. This repo keys, grades, and farms the plates.
 
-72-hour desk: [ROADMAP.md](ROADMAP.md)
+Company pack: [pxd2.github.io](https://pxd2.github.io/)  
+Workflow: [docs/STAGECOACH.md](docs/STAGECOACH.md)  
+Ingest: [docs/ADVERSAL.md](docs/ADVERSAL.md)  
+Grok Build: [docs/GROK.md](docs/GROK.md)
 
-## How a long video gets here
-
-[Adversal](https://adversal.ai) offered an MCP ingest server and early-developer minutes. StageKey uses that offer: their service returns Markdown and synced frames. This repo finishes the plate (key, hologram, cartoon, go-motion, farm).
-
-Install notes: [docs/ADVERSAL.md](docs/ADVERSAL.md). Client example: [docs/mcp.example.json](docs/mcp.example.json).
-
-## Kid desk
+## Workflow
 
 ```bash
-python -m stagekey movie toy.png --job toy-walk --name walker
-python -m stagekey farm toy.png --jobs ghost-message,alert-ghost,cartoon-show
+python -m stagekey coach interview.mp4 --jobs hologram-cyan,cel --name slate_01
 ```
 
-Open the kid UI: `python app.py`
+```
+source → Adversal understand → Coach select → StageKey finish → reel
+```
 
-## Crew desk
+## Floor
 
 ```bash
-python -m stagekey go plate.png --move heavy-steps --shutter 5
 python -m stagekey stage screen.mp4 --screen green --look hologram-cyan --background black
-python -m stagekey ingest long-interview.mp4
-python -m stagekey ingest-status REQUEST_ID --wait
-python -m stagekey ingest-pull REQUEST_ID --dest adversal_out
+python -m stagekey farm plate.png --jobs hologram-cyan,hologram-red,cel --name slate_01
+python -m stagekey go plate.png --move heavy-steps --shutter 5
+python app.py
 ```
 
 ## Install
@@ -56,5 +53,7 @@ FFmpeg on PATH. Python 3.10+ (3.13+ for `adversal-cli`).
 
 ```bash
 python -m pip install -e .
-python -m stagekey bible
+python -m pip install adversal-cli
+grok mcp add adversal -- adversal-cli
+grok mcp add stagekey -- python app.py
 ```
