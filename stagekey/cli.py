@@ -77,7 +77,7 @@ def main() -> None:
     fm.add_argument("src")
     fm.add_argument("--jobs", default=",".join(DEFAULT_LOOKS))
     fm.add_argument("--name", default="farm")
-    fm.add_argument("--planner", default="grok", help="grok | mistral | human")
+    fm.add_argument("--planner", default="agent")
     fm.add_argument("--notes", default="")
     fm.add_argument("--no-reel", action="store_true")
 
