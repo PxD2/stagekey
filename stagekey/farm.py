@@ -1,14 +1,14 @@
-"""Multi-render farm. A planner picks jobs. StageKey prints them."""
+"""Multi-look farm from one plate."""
 from __future__ import annotations
 
 import json
 from pathlib import Path
 from typing import Iterable, Optional
 
-from .jobs import JOBS
+from .jobs import JOBS, resolve_job
 from .studio import assemble_reel, make_shot
 
-DEFAULT_LOOKS = ["ghost-message", "alert-ghost", "cartoon-show", "toon-ghost", "toy-walk"]
+DEFAULT_LOOKS = ["hologram-cyan", "hologram-red", "cel"]
 
 
 def farm(
@@ -19,7 +19,7 @@ def farm(
     reel: bool = True,
     notes: str = "",
 ) -> dict:
-    jobs = list(jobs or DEFAULT_LOOKS)
+    jobs = [resolve_job(j) for j in (jobs or DEFAULT_LOOKS)]
     unknown = [j for j in jobs if j not in JOBS]
     if unknown:
         raise ValueError(f"Unknown jobs {unknown}. Known: {sorted(JOBS)}")
@@ -45,11 +45,7 @@ def farm(
         "jobs": jobs,
         "shots": shots,
         "reel": reel_path,
-        "desks": {
-            "understand": "adversal",
-            "plan": planner,
-            "finish": "stagekey",
-        },
+        "desks": {"understand": "adversal", "plan": planner, "finish": "stagekey"},
     }
     (work / f"{name}.farm.json").write_text(json.dumps(board, indent=2))
     return board
