@@ -7,6 +7,7 @@ import json
 
 from .adversal import help_text, pipeline_card, pull, status, submit
 from .engine import apply_cartoon, apply_hologram, list_modes, stage
+from .farm import DEFAULT_LOOKS, farm
 from .gomotion import apply_rig, go_motion
 from .jobs import list_jobs
 from .prompts import build_plate_prompt
@@ -14,7 +15,7 @@ from .studio import assemble_reel, make_shot, studio_bible
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(prog="stagekey", description="Key, hologram, cartoon, go-motion, Adversal ingest")
+    p = argparse.ArgumentParser(prog="stagekey", description="Key, hologram, cartoon, go-motion, Adversal ingest, multi-render farm")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("stage", help="One-shot finish")
@@ -72,6 +73,14 @@ def main() -> None:
     rl.add_argument("--name", default="reel")
     rl.add_argument("--out", default=None)
 
+    fm = sub.add_parser("farm", help="Multi-render several jobs from one plate")
+    fm.add_argument("src")
+    fm.add_argument("--jobs", default=",".join(DEFAULT_LOOKS))
+    fm.add_argument("--name", default="farm")
+    fm.add_argument("--planner", default="grok", help="grok | mistral | human")
+    fm.add_argument("--notes", default="")
+    fm.add_argument("--no-reel", action="store_true")
+
     ing = sub.add_parser("ingest", help="Queue a video on Adversal (remote understand)")
     ing.add_argument("source", help="Local file or public URL")
     ing.add_argument("--artifact", default="report", help="report | frames | transcript")
@@ -120,6 +129,10 @@ def main() -> None:
         return
     if args.cmd == "reel":
         print(assemble_reel(args.clips, name=args.name, output=args.out))
+        return
+    if args.cmd == "farm":
+        jobs = [j.strip() for j in args.jobs.split(",") if j.strip()]
+        print(json.dumps(farm(args.src, jobs=jobs, name=args.name, planner=args.planner, reel=not args.no_reel, notes=args.notes), indent=2))
         return
     if args.cmd == "ingest":
         print(json.dumps(submit(args.source, artifact=args.artifact, wait=args.wait), indent=2))
