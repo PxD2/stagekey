@@ -21,22 +21,15 @@ tags:
 
 A film desk a kid can press, and a crew can finish.
 
-PxD2 ships this desk in the open so the firm sits on a real stack with other shops — not a closed hallway. Company pack: [pxd2.github.io](https://pxd2.github.io/). Close clock and terms live there. This repo is the public printer.
+Company pack: [pxd2.github.io](https://pxd2.github.io/). Close clock and terms live there.
 
 72-hour desk: [ROADMAP.md](ROADMAP.md)
 
-## The stack
+## How a long video gets here
 
-| Desk | Partner | Job |
-| --- | --- | --- |
-| Understand | [Adversal](https://adversal.ai) MCP | Long video or URL → Markdown + synced frames |
-| Finish | StageKey | Key, hologram, cartoon, go-motion, farm, reel |
-| Plan | Any agent on the client | Pick jobs, write the farm card |
-| Offline plan | Local Mistral (Ollama) | Same card when the desk has no WAN |
+[Adversal](https://adversal.ai) offered an MCP ingest server and early-developer minutes. StageKey uses that offer: their service returns Markdown and synced frames. This repo finishes the plate (key, hologram, cartoon, go-motion, farm).
 
-Adversal asked if MCP ingest fits the roadmap. It does. They are not investors. They are a desk we plug in so StageKey does not pretend to watch multi-hour video alone.
-
-Dual client config: [docs/mcp.example.json](docs/mcp.example.json). Ingest notes: [docs/ADVERSAL.md](docs/ADVERSAL.md).
+Install notes: [docs/ADVERSAL.md](docs/ADVERSAL.md). Client example: [docs/mcp.example.json](docs/mcp.example.json).
 
 ## Kid desk
 
