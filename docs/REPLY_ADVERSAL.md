@@ -2,18 +2,16 @@ Subject: Re: Question on stagekey video pipeline
 
 Hi Giulio,
 
-Thank you for writing, and for the early-developer minutes.
+Thank you — truly — for finding StageKey and for the early-developer minutes. That offer is generous, and we are grateful.
 
-Yes — an MCP ingest server fits what StageKey needs. Local keyframe extraction on long video is the part we do not want inside the agent. We will use Adversal the way you described: process_video, request_id, Markdown and synced frames, no duplicate submits.
+Yes: an MCP ingest server fits what we need. We will start building around Adversal today in our dev work: process_video, request_id, Markdown and synced frames, then StageKey only as the finish after your artifacts land. We will follow your install docs and treat the minutes with care.
 
-StageKey stays the finish step after your artifacts land. We are not building a watch service.
+We are not in a hurry to name anything larger than that. We will use what you offered, learn the workflow, and see where it leads.
 
-Notes on our side:
+Notes on our side as we wire the client:
 https://github.com/PxD2/stagekey/blob/main/docs/ADVERSAL.md
 
-Happy to take the 500 minutes on a first clip and follow your install docs.
-
-Thank you again for reaching out.
+Thank you again for writing, and for the credits.
 
 Chad Peters
 PxD2
