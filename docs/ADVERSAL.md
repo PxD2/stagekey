@@ -1,19 +1,24 @@
 # Adversal ingest
 
-Giulio Donninelli offered Adversal's MCP as a remote ingest path for StageKey and 500 processing minutes per month to early developers.
+Giulio offered Adversal's MCP and early-developer minutes. We use that offer.
 
-We accept that offer as users of the product he shipped.
+StageKey finishes plates after Adversal returns Markdown and frames.
 
-StageKey finishes plates after Adversal returns Markdown and frames. We are not announcing a joint venture. We are wiring the client he documented.
-
-## Install (from Adversal)
+## Install
 
 Python 3.13+, ffmpeg on PATH.
 
 ```bash
 python -m pip install adversal-cli
-claude mcp add adversal -- adversal-cli
 ```
+
+Attach it to the agent you actually use. For PxD2 that is Grok Build:
+
+```bash
+grok mcp add adversal -- adversal-cli
+```
+
+The same binary works in any MCP client. Adversal's own page shows a Claude example. That is an example, not a requirement.
 
 Sign in through the browser when the MCP asks. Token: `~/.adversal/auth.txt`.
 
@@ -25,6 +30,9 @@ python -m stagekey ingest-status REQUEST_ID --wait
 python -m stagekey ingest-pull REQUEST_ID --dest adversal_out
 ```
 
-Follow their rules: check quota, do not submit the same bytes twice, reuse `request_id`.
+Or ask Grok Build, after the two MCP servers are attached, to run those steps.
+
+Check quota. Do not submit the same bytes twice. Reuse `request_id`.
 
 Product: https://adversal.ai
+Grok wiring: [GROK.md](GROK.md)

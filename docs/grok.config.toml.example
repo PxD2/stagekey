@@ -1,0 +1,15 @@
+# Copy to ~/.grok/config.toml or .grok/config.toml inside the StageKey repo.
+# Docs: https://x.ai/docs/build/features/mcp-servers
+
+[mcp_servers.adversal]
+command = "adversal-cli"
+enabled = true
+startup_timeout_sec = 30
+tool_timeout_sec = 6000
+
+[mcp_servers.stagekey]
+command = "python"
+args = ["app.py"]
+enabled = true
+startup_timeout_sec = 30
+tool_timeout_sec = 6000

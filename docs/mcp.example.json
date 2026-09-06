@@ -1,13 +1,6 @@
 {
   "mcpServers": {
-    "adversal": {
-      "command": "adversal-cli",
-      "args": []
-    },
-    "stagekey": {
-      "command": "python",
-      "args": ["app.py"],
-      "cwd": "."
-    }
+    "adversal": { "command": "adversal-cli" },
+    "stagekey": { "command": "python", "args": ["app.py"] }
   }
 }
