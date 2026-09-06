@@ -1,12 +1,8 @@
 """Adversal remote ingest adapter.
 
-Adversal watches long videos and returns Markdown + synced frames.
+Adversal returns Markdown + synced frames.
 StageKey finishes plates (key, hologram, cartoon, go-motion).
-
-This module never pretends Grok's hosted chat is an MCP host for adversal-cli.
-Local MCP clients (Claude Code, Cursor, OpenCode) run both servers side by side.
-This adapter lets the StageKey CLI talk to the same local adversal-cli binary
-those clients launch, so a Grok + GitHub session can still drive the desk.
+The CLI talks to adversal-cli when it is on PATH.
 """
 from __future__ import annotations
 
@@ -57,8 +53,8 @@ def probe_cli() -> dict:
         "ffmpeg_need": bool(shutil.which("ffmpeg") and shutil.which("ffprobe")),
         "note": (
             "Install: python -m pip install adversal-cli && ffmpeg on PATH. "
-            "First MCP tool call that returns AUTHENTICATION REQUIRED → run authenticate, "
-            "finish the browser sign-in, retry. Token lives in ~/.adversal/auth.txt."
+            "If a tool returns AUTHENTICATION REQUIRED, run authenticate, "
+            "finish browser sign-in, retry. Token lives in ~/.adversal/auth.txt."
         ),
     }
 
@@ -210,8 +206,8 @@ def pull(request_id: str, dest: str | Path = "adversal_out") -> dict:
     result["status"] = "needs_mcp_download"
     result["help"] = help_text()[-2000:]
     result["hint"] = (
-        "From an MCP client after process_video completes: download the report "
-        "and frames into this workspace, then run stagekey stage / movie on the frames."
+        "After process_video completes, download the report and frames "
+        "into this workspace, then run stagekey farm or stage on the frames."
     )
     return result
 
@@ -219,21 +215,20 @@ def pull(request_id: str, dest: str | Path = "adversal_out") -> dict:
 def pipeline_card() -> dict:
     return {
         "roles": {
-            "adversal": "Remote understand: ingest URL or file, queue by MD5, return Markdown + frames.",
-            "stagekey": "Local finish: chroma key, hologram, cartoon, go-motion, optical stack, reel.",
-            "grok": "Planning, code, GitHub, and shot cards. Not a host for adversal-cli stdio.",
+            "adversal": "Understand: ingest URL or file, queue by MD5, return Markdown + frames.",
+            "stagekey": "Finish: chroma key, hologram, cartoon, go-motion, farm, reel.",
+            "agent": "Plan: write the farm card from those frames.",
         },
         "mcp_clients": ["Claude Code", "Cursor", "OpenCode"],
         "install_adversal": [
-            "python -m pip install adversal-cli   # needs Python 3.13+",
-            "brew install ffmpeg   # or apt / winget",
+            "python -m pip install adversal-cli",
+            "ffmpeg on PATH",
             "claude mcp add adversal -- adversal-cli",
         ],
         "install_stagekey": [
             "python -m pip install -e .",
-            "python app.py   # Gradio MCP on the StageKey tools",
+            "python app.py",
         ],
         "do_not": "Do not resubmit the same video bytes. Reuse request_id via status/pull.",
         "probe": probe_cli(),
-        "quota_tip": "Check Adversal quota before every submit. Early-dev offer was 500 min/month.",
     }

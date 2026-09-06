@@ -21,30 +21,28 @@ tags:
 
 A film desk a kid can press, and a crew can finish.
 
-**72-hour close desk (through 8 Sep 2026, 12:43 Arizona):** [ROADMAP.md](ROADMAP.md)  
-Company pack (not an offering): [pxd2.github.io](https://pxd2.github.io/)
+PxD2 ships this desk in the open so the firm sits on a real stack with other shops — not a closed hallway. Company pack: [pxd2.github.io](https://pxd2.github.io/). Close clock and terms live there. This repo is the public printer.
 
-The front has jobs with plain names. Under the floor are three original-trilogy techniques that still beat a one-shot generator:
+72-hour desk: [ROADMAP.md](ROADMAP.md)
 
-1. **Go-motion** — the puppet moves *while the shutter is open*.
-2. **Motion control** — the same camera path is a JSON rig.
-3. **Optical printing** — key, hologram, cartoon stacked in order.
+## The stack
 
-## Two desks, one agent
-
-| Layer | Tool | Does |
+| Desk | Partner | Job |
 | --- | --- | --- |
-| Understand long video | [Adversal MCP](https://adversal.ai) (`adversal-cli`) | Upload / URL → remote queue → Markdown + synced frames |
-| Finish the plate | StageKey | Key, hologram, cartoon, go-motion, farm, reel |
-| Plan | Grok (online) or local Mistral | Farm cards. Grok chat is not an MCP host for Adversal |
+| Understand | [Adversal](https://adversal.ai) MCP | Long video or URL → Markdown + synced frames |
+| Finish | StageKey | Key, hologram, cartoon, go-motion, farm, reel |
+| Plan | Any agent on the client | Pick jobs, write the farm card |
+| Offline plan | Local Mistral (Ollama) | Same card when the desk has no WAN |
 
-See [docs/ADVERSAL.md](docs/ADVERSAL.md). Dual-server config: [docs/mcp.example.json](docs/mcp.example.json).
+Adversal asked if MCP ingest fits the roadmap. It does. They are not investors. They are a desk we plug in so StageKey does not pretend to watch multi-hour video alone.
+
+Dual client config: [docs/mcp.example.json](docs/mcp.example.json). Ingest notes: [docs/ADVERSAL.md](docs/ADVERSAL.md).
 
 ## Kid desk
 
 ```bash
 python -m stagekey movie toy.png --job toy-walk --name walker
-python -m stagekey farm toy.png --jobs ghost-message,alert-ghost,cartoon-show --planner grok
+python -m stagekey farm toy.png --jobs ghost-message,alert-ghost,cartoon-show
 ```
 
 Open the kid UI: `python app.py`
@@ -55,6 +53,8 @@ Open the kid UI: `python app.py`
 python -m stagekey go plate.png --move heavy-steps --shutter 5
 python -m stagekey stage screen.mp4 --screen green --look hologram-cyan --background black
 python -m stagekey ingest long-interview.mp4
+python -m stagekey ingest-status REQUEST_ID --wait
+python -m stagekey ingest-pull REQUEST_ID --dest adversal_out
 ```
 
 ## Install

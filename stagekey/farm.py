@@ -1,4 +1,4 @@
-"""Multi-render farm. Planners pick jobs. StageKey prints them. Adversal is never replaced."""
+"""Multi-render farm. A planner picks jobs. StageKey prints them."""
 from __future__ import annotations
 
 import json
@@ -15,7 +15,7 @@ def farm(
     src: str | Path,
     jobs: Optional[Iterable[str]] = None,
     name: str = "farm",
-    planner: str = "grok",
+    planner: str = "agent",
     reel: bool = True,
     notes: str = "",
 ) -> dict:
@@ -32,7 +32,11 @@ def farm(
         shots.append(card)
     reel_path = None
     if reel and shots:
-        reel_path = assemble_reel([c["shot"] for c in shots], name=name, output=str(work / f"{name}_reel.mp4"))
+        reel_path = assemble_reel(
+            [c["shot"] for c in shots],
+            name=name,
+            output=str(work / f"{name}_reel.mp4"),
+        )
     board = {
         "name": name,
         "src": str(src),
@@ -43,8 +47,7 @@ def farm(
         "reel": reel_path,
         "desks": {
             "understand": "adversal",
-            "plan_online": "grok",
-            "plan_offline": "mistral-ollama",
+            "plan": planner,
             "finish": "stagekey",
         },
     }
