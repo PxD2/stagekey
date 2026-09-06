@@ -1,7 +1,7 @@
 [project]
 name = "stagekey"
-version = "0.1.0"
-description = "MCP + CLI for green/blue screen plates, black hologram, and cartoonist looks"
+version = "0.2.0"
+description = "Kid-easy film studio: go-motion, motion-control, optical print, green/blue, hologram, cartoon"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }

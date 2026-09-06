@@ -4,6 +4,7 @@ __pycache__/
 *.webm
 *.mov
 .demo/
+studio-out/
 dist/
 *.egg-info/
 .env

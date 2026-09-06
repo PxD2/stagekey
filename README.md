@@ -1,6 +1,6 @@
 ---
-title: StageKey
-emoji: 🟩
+title: StageKey Studio
+emoji: 🎬
 colorFrom: green
 colorTo: blue
 sdk: gradio
@@ -10,111 +10,70 @@ pinned: false
 license: apache-2.0
 tags:
   - mcp-server
+  - go-motion
+  - motion-control
   - chroma-key
   - hologram
-  - cartoon
   - video
 ---
 
-# StageKey
+# StageKey Studio
 
-An MCP that did not exist: **one tool** that finishes AI video plates for
+A film desk a kid can press, and a crew can finish.
 
-- green screen
-- blue screen
-- black hologram (cyan / red / amber / ghost)
-- cartoonist modes (anime, cel, comic, ink, newsprint, pop, noir)
-- toon + hologram stacked
+The front has jobs with plain names. Under the floor are three original-trilogy techniques that still beat a one-shot generator:
 
-Generic video MCPs expose a chroma-key slider. StageKey is a **stage language** for generated plates: compile the prompt, pull the screen, drop the subject on black, grade the look.
+1. **Go-motion** — the puppet moves *while the shutter is open*, so the frame carries real blur instead of a chopped stop-motion stutter.
+2. **Motion control** — the same camera path is a JSON rig. Run it on the beauty pass, then on the screen pass, then on the glow pass. They lock.
+3. **Optical printing** — key, shadow, hologram, cartoon, tracers stacked in order, not hoped-for in a single prompt.
 
-No GPU required for the finish. FFmpeg only.
+A giant model can invent a pretty shot once. It cannot repeat the move, hold the matte, or give you shutter-true blur on command. That is the competition.
 
-## Super simple
+## Kid desk
 
 ```bash
-python -m stagekey prompt "a dancer in a windbreaker" --screen green --hologram cyan
-python -m stagekey stage plate.mp4 --screen green --look hologram-cyan --background black
+python -m stagekey movie toy.png --job toy-walk --name walker
 ```
 
-Or one MCP call:
-
-```
-stage(video, screen="green", look="hologram-cyan", background="black")
-```
-
-## Beyond-simple looks
-
-| look | what you get |
+| Button the kid sees | What the desk actually does |
 | --- | --- |
-| `raw` | clean key only |
-| `hologram-cyan` | scanlines, teal glow, chromatic split, flicker on black |
-| `hologram-red` | emergency / alert hologram |
-| `hologram-amber` | tactical HUD hologram |
-| `hologram-ghost` | faint unstable projection |
-| `cartoon-anime` | cel shade + line |
-| `cartoon-cel` | Saturday-morning flats |
-| `cartoon-comic` | ink + print grain |
-| `cartoon-ink` | brush comic |
-| `cartoon-newsprint` | pulpy strip |
-| `cartoon-pop` | poster graphic |
-| `cartoon-noir` | graphic-novel ink |
-| `toon-hologram` | cartoon, then cyan hologram |
+| Make the toy walk | Go-motion puppet, heavy shutter, stomp bob |
+| Fly it across the sky | Motion-control flyby, saved rig |
+| Walk the camera in | Repeatable push-in |
+| Make it float | Hover go-motion |
+| Ghost message on black | Pull green/blue, print cyan hologram |
+| Red warning ghost | Same printer, red hologram |
+| Turn it into a cartoon | Cel optical |
+| Cartoon ghost | Cel then hologram |
+| Do the same camera move again | Re-run camera.rig.json on a new plate |
 
-Background can be `black`, `keep`, `transparent` (WebM alpha), a `#hex`, or another video/image.
-
-## MCP
-
-Gradio launch already serves MCP:
+Then cut:
 
 ```bash
-pip install -r requirements.txt
+python -m stagekey reel shotA.mp4 shotB.mp4 --name first-reel
+```
+
+Open the kid UI:
+
+```bash
 python app.py
 ```
 
-Client:
+Three steps: add a picture, pick a job, press **Make the shot**.
 
-```json
-{
-  "mcpServers": {
-    "stagekey": {
-      "command": "python",
-      "args": ["app.py"],
-      "cwd": "/path/to/stagekey"
-    }
-  }
-}
+## Crew desk
+
+```bash
+python -m stagekey go plate.png --kind puppet --move heavy-steps --shutter 5
+python -m stagekey rerun other-plate.png camera.rig.json
+python -m stagekey stage screen.mp4 --screen green --look hologram-cyan --background black
 ```
-
-After you push this as a Hugging Face Space:
-
-```
-https://<user>-stagekey.hf.space/gradio_api/mcp/sse
-```
-
-Add it at https://huggingface.co/settings/mcp next to the official Hub MCP.
-
-Tools the agent sees:
-
-- `tool_list_modes`
-- `tool_build_plate_prompt`
-- `tool_stage`
-- `tool_hologram`
-- `tool_cartoon`
-
-## Full HF workflow
-
-1. `tool_build_plate_prompt` → copy into Wan 2.1 / LTX-2 / MiniMax H3 / Helios.
-2. Save the clip.
-3. `tool_stage` with `screen=green` and `look=hologram-cyan`.
-4. Composite over any set later (`background=/path/to/set.mp4`).
-
-Do **not** bake the final set into the generation if you want to re-key.
 
 ## Install
 
+FFmpeg on PATH. Python 3.10+.
+
 ```bash
-# ffmpeg must be on PATH
 python -m pip install -e .
-python -m stagekey modes
+python -m stagekey bible
 ```
