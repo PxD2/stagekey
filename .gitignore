@@ -9,10 +9,8 @@ adversal_out/
 dist/
 *.egg-info/
 
-# Never commit credentials
 .env
 .env.*
-!.env.example
 *.pem
 *.key
 *.p12
@@ -22,9 +20,3 @@ auth.txt
 .adversal/
 .stagekey/
 .grok/config.toml
-secrets/
-credentials/
-*api_key*
-*apikey*
-*secret*
-!docs/grok.config.toml.example
