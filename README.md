@@ -29,6 +29,16 @@ The front has jobs with plain names. Under the floor are three original-trilogy 
 
 A giant model can invent a pretty shot once. It cannot repeat the move, hold the matte, or give you shutter-true blur on command. That is the competition.
 
+## Two desks, one agent
+
+| Layer | Tool | Does |
+| --- | --- | --- |
+| Understand long video | [Adversal MCP](https://adversal.ai) (`adversal-cli`) | Upload / URL → remote queue → Markdown + synced frames. Async. MD5 reuse. |
+| Finish the plate | StageKey | Key, hologram, cartoon, go-motion, rerun a rig, reel. |
+| Plan and code | Grok + this repo | Architecture and GitHub. Grok chat is not an MCP host for Adversal. |
+
+See [docs/ADVERSAL.md](docs/ADVERSAL.md). Dual-server config: [docs/mcp.example.json](docs/mcp.example.json).
+
 ## Kid desk
 
 ```bash
@@ -67,13 +77,17 @@ Three steps: add a picture, pick a job, press **Make the shot**.
 python -m stagekey go plate.png --kind puppet --move heavy-steps --shutter 5
 python -m stagekey rerun other-plate.png camera.rig.json
 python -m stagekey stage screen.mp4 --screen green --look hologram-cyan --background black
+python -m stagekey ingest long-interview.mp4
+python -m stagekey ingest-status REQUEST_ID --wait
+python -m stagekey ingest-pull REQUEST_ID --dest adversal_out
 ```
 
 ## Install
 
-FFmpeg on PATH. Python 3.10+.
+FFmpeg on PATH. Python 3.10+ (3.13+ if you also install `adversal-cli`).
 
 ```bash
 python -m pip install -e .
 python -m stagekey bible
+python -m stagekey ingest-probe
 ```
